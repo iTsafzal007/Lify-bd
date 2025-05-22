@@ -378,17 +378,6 @@
         .add-review-form button:hover {
             background-color: #218838;
         }
-        /* ইউজারদের রিভিউয়ের জন্য ভিন্ন রঙ - এই অংশটি মুছে ফেলা হয়েছে */
-        /* .review-item.user-review {
-            background: #d1ecf1;
-            border-left: 5px solid #007bff;
-        } */
-        /* এডমিন রিভিউয়ের জন্য ভিন্ন রঙ - এই অংশটি মুছে ফেলা হয়েছে */
-        /* .review-item.admin-review {
-            background: #e0ffe0;
-            border-left: 5px solid #28a745;
-        } */
-
 
         /* Admin Review Form */
         .admin-review-form {
@@ -465,12 +454,13 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="#" id="homeNavBtn">Home</a>
         <a href="#" id="profileNavBtn">Profile</a>
-        <a href="#" id="reviewsNavBtn" class="bengali-text">রিভিউস</a> <a href="#" id="adminNavBtn" style="display:none;">Admin</a>
+        <a href="#" id="reviewsNavBtn" class="bengali-text">রিভিউস</a>
+        <a href="#" id="adminNavBtn" style="display:none;">Admin</a>
     </div>
 
     <header>
         <span class="menu-button" onclick="openNav()">&#9776; মেনু</span>
-        </header>
+    </header>
 
     <div id="authPage" class="container">
         <div class="auth-form" id="loginForm">
@@ -532,14 +522,14 @@
         <h2 class="bengali-text">এডমিন প্যানেল</h2>
         <h3 class="bengali-text">পেমেন্টের অনুরোধসমূহ:</h3>
         <ul id="paymentList">
-            </ul>
+        </ul>
     </div>
 
     <div id="reviewsPage" class="container reviews-section">
         <h2 class="bengali-text">আমাদের কাস্টমারদের মতামত</h2>
 
         <div class="all-reviews-container">
-            </div>
+        </div>
 
         <div class="admin-review-button-wrapper" style="display: none;" id="adminReviewBtnWrapper">
             <button class="admin-review-button" id="toggleAdminReviewForm">এডমিন হিসেবে রিভিউ দিন</button>
@@ -554,9 +544,11 @@
 
         <hr>
 
-        <div class="review-input-section"> <h3 class="bengali-text">আপনার মূল্যবান মতামত দিন</h3>
+        <div class="review-input-section">
+            <h3 class="bengali-text">আপনার মূল্যবান মতামত দিন</h3>
             <div class="add-review-form">
-                <input type="text" id="reviewerName" placeholder="আপনার নাম" required readonly> <textarea id="reviewText" placeholder="আপনার রিভিউ লিখুন..." rows="4" required></textarea>
+                <input type="text" id="reviewerName" placeholder="আপনার নাম" required readonly>
+                <textarea id="reviewText" placeholder="আপনার রিভিউ লিখুন..." rows="4" required></textarea>
                 <button id="submitReview" class="bengali-text">রিভিউ জমা দিন</button>
             </div>
         </div>
@@ -585,7 +577,8 @@
 
         const flashMessage = document.getElementById('flashMessage');
 
-        let currentUser = null; // বর্তমান লগইন করা ইউজার
+        // বর্তমান লগইন করা ইউজার, লোকালস্টোরেজ থেকে লোড করুন
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
         // ডেমো ইউজার ডেটা (বাস্তব ডেটাবেসের পরিবর্তে)
         const users = JSON.parse(localStorage.getItem('users')) || [];
@@ -704,6 +697,7 @@
                 users.push(newUser);
                 localStorage.setItem('users', JSON.stringify(users));
                 currentUser = newUser;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser)); // লগইন স্টেট লোকালস্টোরেজে সেভ করুন
                 showFlashMessage('সফলভাবে রেজিস্টার করা হয়েছে এবং লগইন করা হয়েছে!');
                 showPage(homePage);
                 updateSidebarForUser();
@@ -721,6 +715,7 @@
 
             if (user) {
                 currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser)); // লগইন স্টেট লোকালস্টোরেজে সেভ করুন
                 showFlashMessage('সফলভাবে লগইন করা হয়েছে!');
                 showPage(homePage);
                 updateSidebarForUser();
@@ -736,6 +731,7 @@
 
         logoutBtn.addEventListener('click', () => {
             currentUser = null;
+            localStorage.removeItem('currentUser'); // লোকালস্টোরেজ থেকে লগইন স্টেট সরান
             showFlashMessage('সফলভাবে লগ আউট করা হয়েছে।');
             showPage(authPage);
             updateSidebarForUser();
@@ -953,15 +949,6 @@
             allReviews.forEach(review => {
                 const reviewDiv = document.createElement('div');
                 reviewDiv.classList.add('review-item');
-                // যেহেতু সব রিভিউ একই রকম হবে, তাই user-review এবং admin-review ক্লাস যোগ করার দরকার নেই।
-                // যদি আপনি ভবিষ্যতে আবার ভিন্ন রঙ বা স্টাইল দিতে চান, তাহলে এই লাইনগুলো আনকমেন্ট করতে পারেন:
-                /*
-                if (review.type === 'user') {
-                    reviewDiv.classList.add('user-review');
-                } else if (review.type === 'fake' && review.id.startsWith('admin_')) { // এডমিন রিভিউ
-                    reviewDiv.classList.add('admin-review');
-                }
-                */
 
                 reviewDiv.innerHTML = `
                     <p class="reviewer-name">${review.name}</p>
@@ -1005,10 +992,10 @@
             const review = reviewTextInput.value.trim();
 
             if (name && review) {
-                const newReview = { 
+                const newReview = {
                     id: 'user_' + Date.now() + Math.random().toString(36).substr(2, 9), // ইউনিক আইডি
-                    name: name, 
-                    message: review, 
+                    name: name,
+                    message: review,
                     timestamp: new Date().toISOString(), // ISO ফরম্যাটে টাইমস্ট্যাম্প
                     type: 'user' // টাইপ নির্দিষ্ট করুন
                 };
@@ -1045,18 +1032,18 @@
             const review = adminReviewText.value.trim();
 
             if (name && review) {
-                const newReview = { 
+                const newReview = {
                     id: 'admin_' + Date.now() + Math.random().toString(36).substr(2, 9), // ইউনিক আইডি
-                    name: name, 
-                    message: review, 
+                    name: name,
+                    message: review,
                     timestamp: new Date().toISOString(), // ISO ফরম্যাটে টাইমস্ট্যাম্প
                     type: 'fake' // এডমিন রিভিউ ফেক রিভিউ অ্যারেতে থাকবে
                 };
-                
+
                 let currentFakeReviews = JSON.parse(localStorage.getItem('fakeReviews')) || [];
                 currentFakeReviews.push(newReview); // অ্যারের শেষে যোগ করুন
                 localStorage.setItem('fakeReviews', JSON.stringify(currentFakeReviews)); // লোকালস্টোরেজে সেভ করুন
-                
+
                 showFlashMessage('এডমিন রিভিউ সফলভাবে জমা হয়েছে!', 'success', 5000);
 
                 loadReviews(); // সমস্ত রিভিউ লোড করুন
