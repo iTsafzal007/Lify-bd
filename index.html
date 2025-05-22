@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lify bd </title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* গ্লোবাল স্টাইল */
+        body {
+            font-family: 'Roboto', sans-serif; /* ইংরেজি ফন্ট */
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* বাংলা ফন্ট */
+        h1, h2, h3, h4, h5, h6, .bengali-text, .menu-button, .buy-button,
+        .reviews-section h2, .reviews-section h3, .reviews-section h4,
+        .review-item p, .add-review-form input, .add-review-form textarea, .add-review-form button,
+        .admin-review-form input, .admin-review-form textarea, .admin-review-form button,
+        .admin-review-button, .delete-review-btn { /* ডিলিট বাটনের জন্য ফন্ট */
+            font-family: 'Baloo Da 2', cursive; /* বাংলা ফন্ট */
+        }
+
+
+        .container {
+            width: 90%;
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* হেডার */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #28a745; /* সবুজ রঙ */
+            color: white;
+            position: relative;
+        }
+        /* হেডার লোগো শুধুমাত্র পেমেন্ট পেজে থাকবে, তাই এখানে রাখা হচ্ছে না */
+        .menu-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* সাইড মেনু */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 100;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        /* ফর্ম স্টাইল */
+        .auth-form {
+            padding: 20px;
+            text-align: center;
+        }
+        .auth-form input[type="text"],
+        .auth-form input[type="email"],
+        .auth-form input[type="password"] {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .auth-form button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .auth-form button:hover {
+            background-color: #0056b3;
+        }
+        .auth-form p {
+            margin-top: 15px;
+        }
+        .auth-form a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        /* হোম পেজ স্টাইল */
+        .home-section {
+            text-align: center;
+            padding: 20px;
+        }
+        .product-card {
+            background-color: #e9ecef;
+            margin: 15px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            max-width: 400px;
+        }
+        .product-card h2 {
+            margin-top: 0;
+            color: #28a745;
+        }
+        .buy-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            text-decoration: none; /* লিংক হলে আন্ডারলাইন সরানোর জন্য */
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .buy-button:hover {
+            background-color: #218838;
+        }
+
+        /* পেমেন্ট পেজ স্টাইল */
+        .payment-page {
+            text-align: center;
+            padding: 30px;
+            background-color: #ffcccc; /* পিঙ্ক কালার */
+            min-height: 100vh;
+            display: none; /* ডিফল্ট ভাবে লুকানো থাকবে */
+            position: relative; /* লোগো পজিশন করার জন্য */
+        }
+        .payment-page h2 {
+            color: #c0392b;
+        }
+        .payment-info {
+            background-color: #ffe0e6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: inline-block;
+            text-align: left;
+        }
+        .payment-info p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .copy-button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+        .payment-page input[type="text"] {
+            padding: 10px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px; /* ছোট ইনপুট ফিল্ড */
+            text-align: center;
+        }
+        .confirm-button {
+            background-color: #ccc; /* ডিফল্ট কালো */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: not-allowed; /* ডিফল্ট কার্সর */
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .confirm-button.active {
+            background-color: #28a745; /* সক্রিয় হলে সবুজ */
+            cursor: pointer;
+        }
+        .confirm-button.active:hover {
+            background-color: #218838;
+        }
+        .payment-image {
+            margin-top: 20px;
+            max-width: 150px; /* ইমেজ সাইজ */
+            height: auto;
+            border-radius: 5px;
+        }
+        .payment-page .logo-img { /* পেমেন্ট পেজের জন্য লোগো স্টাইল */
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 50px; /* লোগোর সাইজ */
+            height: auto;
+            border-radius: 50%;
+        }
+
+
+        /* প্রোফাইল পেজ স্টাইল */
+        .profile-section {
+            text-align: center;
+            padding: 20px;
+            display: none; /* ডিফল্ট ভাবে লুকানো থাকবে */
+        }
+        .profile-section h2 {
+            color: #007bff;
+        }
+        .profile-info p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .logout-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .logout-button:hover {
+            background-color: #c82333;
+        }
+
+        /* এডমিন প্যানেল */
+        .admin-panel {
+            text-align: center;
+            padding: 20px;
+            display: none; /* ডিফল্ট ভাবে লুকানো থাকবে */
+            background-color: #f8f9fa;
+        }
+        .admin-panel h2 {
+            color: #6f42c1; /* পার্পল */
+        }
+        #paymentList {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 20px;
+        }
+        #paymentList li {
+            background-color: #e2e6ea;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* ফ্ল্যাশ মেসেজ */
+        .flash-message {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            font-family: 'Baloo Da 2', cursive; /* বাংলা ফন্ট */
+        }
+        .flash-message.error {
+            background-color: #dc3545;
+        }
+
+        /* রিভিউ সেকশন স্টাইল */
+        .reviews-section {
+            width: 90%;
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none; /* ডিফল্ট ভাবে লুকানো থাকবে */
+        }
+
+        .reviews-section h2, .reviews-section h3, .reviews-section h4 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* সকল রিভিউয়ের জন্য একই স্টাইল */
+        .review-item {
+            background: #e9e9e9; /* হালকা ধূসর ব্যাকগ্রাউন্ড */
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #007bff; /* নীল বর্ডার */
+            position: relative; /* ডিলিট বাটন পজিশন করার জন্য */
+        }
+
+        .review-item p {
+            margin: 0;
+            font-size: 0.95em;
+        }
+
+        .review-item .reviewer-name {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        /* Add Review Form for Users (এখন এটি সবার জন্য) */
+        .review-input-section { /* নতুন ক্লাস নাম */
+            display: block; /* সবসময় দেখাবে */
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .add-review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .add-review-form input[type="text"],
+        .add-review-form textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .add-review-form button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-review-form button:hover {
+            background-color: #218838;
+        }
+        /* ইউজারদের রিভিউয়ের জন্য ভিন্ন রঙ - এই অংশটি মুছে ফেলা হয়েছে */
+        /* .review-item.user-review {
+            background: #d1ecf1;
+            border-left: 5px solid #007bff;
+        } */
+        /* এডমিন রিভিউয়ের জন্য ভিন্ন রঙ - এই অংশটি মুছে ফেলা হয়েছে */
+        /* .review-item.admin-review {
+            background: #e0ffe0;
+            border-left: 5px solid #28a745;
+        } */
+
+
+        /* Admin Review Form */
+        .admin-review-form {
+            display: none; /* ডিফল্ট ভাবে লুকানো থাকবে */
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            border: 1px solid #cceeff;
+        }
+        .admin-review-form input[type="text"],
+        .admin-review-form textarea {
+            padding: 10px;
+            border: 1px solid #aaddff;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        .admin-review-form button {
+            background-color: #6f42c1; /* পার্পল */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .admin-review-form button:hover {
+            background-color: #5a36a0;
+        }
+        .admin-review-button-wrapper {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .admin-review-button {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .admin-review-button:hover {
+            background-color: #5a36a0;
+        }
+
+        /* ডিলিট বাটন */
+        .delete-review-btn {
+            background-color: #dc3545; /* লাল */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none; /* ডিফল্টভাবে লুকানো থাকবে */
+        }
+        .delete-review-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="flashMessage" class="flash-message"></div>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#" id="homeNavBtn">Home</a>
+        <a href="#" id="profileNavBtn">Profile</a>
+        <a href="#" id="reviewsNavBtn" class="bengali-text">রিভিউস</a> <a href="#" id="adminNavBtn" style="display:none;">Admin</a>
+    </div>
+
+    <header>
+        <span class="menu-button" onclick="openNav()">&#9776; মেনু</span>
+        </header>
+
+    <div id="authPage" class="container">
+        <div class="auth-form" id="loginForm">
+            <h2 class="bengali-text">লগইন করুন</h2>
+            <input type="email" id="loginEmail" placeholder="আপনার ইমেইল" required>
+            <input type="password" id="loginPassword" placeholder="আপনার পাসওয়ার্ড" required>
+            <button id="loginBtn">লগইন</button>
+            <p class="bengali-text">আপনার কি অ্যাকাউন্ট নেই? <a href="#" id="showRegister">রেজিস্টার করুন</a></p>
+        </div>
+
+        <div class="auth-form" id="registerForm" style="display:none;">
+            <h2 class="bengali-text">রেজিস্টার করুন</h2>
+            <input type="text" id="registerName" placeholder="আপনার পুরো নাম" required>
+            <input type="email" id="registerEmail" placeholder="আপনার ইমেইল" required>
+            <input type="password" id="registerPassword" placeholder="একটি পাসওয়ার্ড দিন" required>
+            <button id="registerBtn">রেজিস্টার</button>
+            <p class="bengali-text">আপনার কি অ্যাকাউন্ট আছে? <a href="#" id="showLogin">লগইন করুন</a></p>
+        </div>
+    </div>
+
+    <div id="homePage" class="container home-section" style="display:none;">
+        <div class="product-card">
+            <h2 class="bengali-text">৮৫০ ইউটিউব সাবস্ক্রাইবার ১৫০ টাকা</h2>
+            <button class="buy-button" data-price="150" data-product="ইউটিউব সাবস্ক্রাইবার">কিনুন</button>
+        </div>
+        <div class="product-card">
+            <h2 class="bengali-text">৭০০০ ফেসবুক ফলোয়ার ৩৫০ টাকা</h2>
+            <button class="buy-button" data-price="350" data-product="ফেসবুক ফলোয়ার">কিনুন</button>
+        </div>
+    </div>
+
+    <div id="paymentPage" class="payment-page" style="display:none;">
+        <h2 class="bengali-text">আপনার অর্ডার কনফার্ম করুন</h2>
+        <img src="https://i.imgur.com/eq1pXXe.jpeg" alt="Logo" class="logo-img">
+        <div class="payment-info">
+            <p class="bengali-text">বিকাশ পেমেন্ট অপশন থেকে পেমেন্ট করুন:</p>
+            <p class="bengali-text">
+                <span id="bKashNumber">01708416715</span>
+                <button class="copy-button" onclick="copyBikashNumber()">কপি করুন</button>
+            </p>
+            <p class="bengali-text">আপনি <span id="paymentAmount">0</span> টাকা পাঠিয়েছেন।</p>
+            <p class="bengali-text">আপনি কোন নাম্বার থেকে টাকা পাঠাবেন লাস্ট চারটি নাম্বার লিখুন:</p>
+            <input type="text" id="lastFourDigits" placeholder="xxxx" maxlength="4">
+            <button class="confirm-button" id="confirmPaymentBtn" disabled>কনফার্ম করুন</button>
+        </div>
+        <img src="https://i.imgur.com/idQbZ1W.jpeg" alt="Payment Instructions" class="payment-image">
+    </div>
+
+    <div id="profilePage" class="container profile-section">
+        <h2 class="bengali-text">আমার প্রোফাইল</h2>
+        <div class="profile-info">
+            <p class="bengali-text">নাম: <span id="profileName"></span></p>
+            <p class="bengali-text">ইমেইল: <span id="profileEmail"></span></p>
+        </div>
+        <button class="logout-button" id="logoutBtn">লগ আউট</button>
+    </div>
+
+    <div id="adminPanel" class="container admin-panel">
+        <h2 class="bengali-text">এডমিন প্যানেল</h2>
+        <h3 class="bengali-text">পেমেন্টের অনুরোধসমূহ:</h3>
+        <ul id="paymentList">
+            </ul>
+    </div>
+
+    <div id="reviewsPage" class="container reviews-section">
+        <h2 class="bengali-text">আমাদের কাস্টমারদের মতামত</h2>
+
+        <div class="all-reviews-container">
+            </div>
+
+        <div class="admin-review-button-wrapper" style="display: none;" id="adminReviewBtnWrapper">
+            <button class="admin-review-button" id="toggleAdminReviewForm">এডমিন হিসেবে রিভিউ দিন</button>
+        </div>
+
+        <div class="admin-review-form" id="adminReviewForm">
+            <h3 class="bengali-text">এডমিন হিসেবে রিভিউ লিখুন</h3>
+            <input type="text" id="adminReviewerName" placeholder="রিভিউ প্রদানকারীর নাম" required>
+            <textarea id="adminReviewText" placeholder="রিভিউ মেসেজ লিখুন..." rows="4" required></textarea>
+            <button id="submitAdminReview" class="bengali-text">রিভিউ জমা দিন (এডমিন)</button>
+        </div>
+
+        <hr>
+
+        <div class="review-input-section"> <h3 class="bengali-text">আপনার মূল্যবান মতামত দিন</h3>
+            <div class="add-review-form">
+                <input type="text" id="reviewerName" placeholder="আপনার নাম" required readonly> <textarea id="reviewText" placeholder="আপনার রিভিউ লিখুন..." rows="4" required></textarea>
+                <button id="submitReview" class="bengali-text">রিভিউ জমা দিন</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // জাভাস্ক্রিপ্ট কোড
+        const authPage = document.getElementById('authPage');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const showRegisterBtn = document.getElementById('showRegister');
+        const showLoginBtn = document.getElementById('showLogin');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const homePage = document.getElementById('homePage');
+        const paymentPage = document.getElementById('paymentPage');
+        const profilePage = document.getElementById('profilePage');
+        const adminPanel = document.getElementById('adminPanel');
+        const reviewsPage = document.getElementById('reviewsPage'); // নতুন রিভিউ পেজ
+
+        const profileName = document.getElementById('profileName');
+        const profileEmail = document.getElementById('profileEmail');
+
+        const flashMessage = document.getElementById('flashMessage');
+
+        let currentUser = null; // বর্তমান লগইন করা ইউজার
+
+        // ডেমো ইউজার ডেটা (বাস্তব ডেটাবেসের পরিবর্তে)
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const adminUser = {
+            fullName: "Admin",
+            email: "adminggxp@admininfo.com",
+            password: "Adminggxp5",
+            isAdmin: true
+        };
+        // নিশ্চিত করুন এডমিন ইউজার সবসময় থাকে
+        if (!users.some(user => user.email === adminUser.email)) {
+            users.push(adminUser);
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // ডেমো পেমেন্ট ডেটা (বাস্তব ডেটাবেসের পরিবর্তে)
+        const payments = JSON.parse(localStorage.getItem('payments')) || [];
+
+        // ফেক রিভিউ ডেটা (বাংলা ও ইংরেজি নামের মিশ্রণ)
+        const fakeReviews = JSON.parse(localStorage.getItem('fakeReviews')) || [
+            { id: 'fake_1', name: "রবিন খান", message: "আমি মাত্র এদের থেকে সাবস্ক্রাইবার কিনছি, ভালই লাগলো আমার। জীবনে ভাবি নাই যে এত কম দামে এত সাবস্ক্রাইবার পেয়ে যাব! ভাই ভাই ভাই!", timestamp: '2025-05-20T10:00:00Z', type: 'fake' },
+            { id: 'fake_2', name: "S. Alam", message: "লিটারেলি ভাই আমি অনেক খুশি হলাম। এই সার্ভিসটা নিলাম, ভালোই লাগলো আমার। দারুন সার্ভিস!", timestamp: '2025-05-19T11:00:00Z', type: 'fake' },
+            { id: 'fake_3', name: "নাবিলা রহমান", message: "আমি আমার শখের ইউটিউব চ্যানেলে সাবস্ক্রাইবার কিনেছি। ভালোই লাগলো, অনেকগুলো কিনলাম। একবার কিনে দেখলাম ট্রাস্টেড কিনা, আসলেই খুব ভালো সার্ভিস দেয় তারা!", timestamp: '2025-05-18T12:00:00Z', type: 'fake' },
+            { id: 'fake_4', name: "Fahim M.", message: "আরে ভাই, আসলেই খুব ভালো সার্ভিস দেয় তারা। আমি আমার চ্যানেলের সাবস্ক্রাইবার কিনলাম, খুবই সন্তুষ্ট।", timestamp: '2025-05-17T13:00:00Z', type: 'fake' },
+            { id: 'fake_5', name: "তিশা ইসলাম", message: "অসাধারণ অভিজ্ঞতা! এত সহজে আর এত কম দামে সাবস্ক্রাইবার পাবো ভাবিনি। ধন্যবাদ!", timestamp: '2025-05-16T14:00:00Z', type: 'fake' },
+        ];
+        // নিশ্চিত করুন যে fakeReviews লোকালস্টোরেজে লোড হয়, যদি না থাকে
+        if (!localStorage.getItem('fakeReviews')) {
+            localStorage.setItem('fakeReviews', JSON.stringify(fakeReviews));
+        }
+
+        // ব্যবহারকারীদের রিভিউ, যা লোকালস্টোরেজে সেভ হবে
+        const userReviews = JSON.parse(localStorage.getItem('userReviews')) || [];
+
+        function showFlashMessage(message, type = 'success', duration = 10000) { // ডিফল্ট ১০ সেকেন্ড
+            flashMessage.innerText = message;
+            flashMessage.className = `flash-message ${type}`;
+            flashMessage.style.display = 'block';
+            flashMessage.style.opacity = '1';
+            setTimeout(() => {
+                flashMessage.style.opacity = '0';
+                setTimeout(() => {
+                    flashMessage.style.display = 'none';
+                }, 500);
+            }, duration);
+        }
+
+        // নেভিগেশন ফাংশন
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+        }
+
+        function hideAllPages() {
+            authPage.style.display = 'none';
+            homePage.style.display = 'none';
+            paymentPage.style.display = 'none';
+            profilePage.style.display = 'none';
+            adminPanel.style.display = 'none';
+            reviewsPage.style.display = 'none'; // নতুন রিভিউ পেজ
+        }
+
+        function showPage(pageElement) {
+            hideAllPages();
+            pageElement.style.display = 'block';
+        }
+
+        function renderPaymentList() {
+            const paymentListUl = document.getElementById('paymentList');
+            paymentListUl.innerHTML = ''; // তালিকা পরিষ্কার করুন
+            if (payments.length === 0) {
+                paymentListUl.innerHTML = '<li class="bengali-text">কোনো পেমেন্টের অনুরোধ নেই।</li>';
+                return;
+            }
+            payments.forEach(payment => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <p class="bengali-text">পণ্য: <strong>${payment.product}</strong></p>
+                    <p class="bengali-text">পরিমাণ: <strong>${payment.amount} টাকা</strong></p>
+                    <p class="bengali-text">লিংক: <strong>${payment.link}</strong></p>
+                    <p class="bengali-text">শেষ ৪ ডিজিট: <strong>${payment.lastFourDigits}</strong></p>
+                    <p class="bengali-text">ব্যবহারকারী: <strong>${payment.userEmail}</strong></p>
+                `;
+                paymentListUl.appendChild(li);
+            });
+        }
+
+
+        // লগইন/রেজিস্ট্রেশন ইভেন্ট লিসেনার
+        showRegisterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+
+        showLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        });
+
+        registerBtn.addEventListener('click', () => {
+            const fullName = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (fullName && email && password) {
+                if (users.find(user => user.email === email)) {
+                    showFlashMessage('এই ইমেইল দিয়ে ইতিমধ্যে অ্যাকাউন্ট খোলা আছে।', 'error');
+                    return;
+                }
+                const newUser = { fullName, email, password, isAdmin: false };
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                currentUser = newUser;
+                showFlashMessage('সফলভাবে রেজিস্টার করা হয়েছে এবং লগইন করা হয়েছে!');
+                showPage(homePage);
+                updateSidebarForUser();
+                updateReviewFormForUser(); // রিভিউ ফর্ম আপডেট
+            } else {
+                showFlashMessage('সব তথ্য পূরণ করুন।', 'error');
+            }
+        });
+
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                showFlashMessage('সফলভাবে লগইন করা হয়েছে!');
+                showPage(homePage);
+                updateSidebarForUser();
+                updateReviewFormForUser(); // রিভিউ ফর্ম আপডেট
+            } else {
+                if (users.find(u => u.email === email)) {
+                    showFlashMessage('পাসওয়ার্ড ভুল হয়েছে।', 'error');
+                } else {
+                    showFlashMessage('এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট রেজিস্টার করা নেই।', 'error');
+                }
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            showFlashMessage('সফলভাবে লগ আউট করা হয়েছে।');
+            showPage(authPage);
+            updateSidebarForUser();
+            updateReviewFormForUser(); // রিভিউ ফর্ম আপডেট
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        });
+
+        // সাইডবার এবং পেজ নেভিগেশন
+        document.getElementById('homeNavBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage(homePage);
+            closeNav();
+        });
+
+        document.getElementById('profileNavBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentUser) {
+                profileName.innerText = currentUser.fullName;
+                profileEmail.innerText = currentUser.email;
+                showPage(profilePage);
+            } else {
+                showFlashMessage('লগইন করুন প্রোফাইল দেখতে।', 'error');
+                showPage(authPage);
+            }
+            closeNav();
+        });
+
+        document.getElementById('adminNavBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentUser && currentUser.isAdmin) {
+                renderPaymentList();
+                showPage(adminPanel);
+            } else {
+                showFlashMessage('আপনার এডমিন অ্যাক্সেস নেই।', 'error');
+                showPage(homePage); // বা অন্য কোনো পেজ
+            }
+            closeNav();
+        });
+
+        // নতুন রিভিউ বাটন ইভেন্ট লিসেনার
+        document.getElementById('reviewsNavBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            loadReviews(); // সমস্ত রিভিউ লোড করুন
+            updateReviewFormForUser(); // রিভিউ ফর্ম আপডেট
+            showPage(reviewsPage); // রিভিউ পেজ দেখান
+            closeNav();
+        });
+
+
+        function updateSidebarForUser() {
+            const adminNavBtn = document.getElementById('adminNavBtn');
+            if (currentUser && currentUser.isAdmin) {
+                adminNavBtn.style.display = 'block';
+            } else {
+                adminNavBtn.style.display = 'none';
+            }
+        }
+
+        function updateReviewFormForUser() {
+            const reviewerNameInput = document.getElementById('reviewerName');
+            const adminReviewBtnWrapper = document.getElementById('adminReviewBtnWrapper');
+            const reviewInputSection = document.querySelector('.review-input-section'); // নতুন ক্লাস
+            const adminReviewForm = document.getElementById('adminReviewForm');
+
+            if (currentUser) {
+                reviewerNameInput.value = currentUser.fullName;
+                reviewerNameInput.readOnly = true; // নাম এডিট করা যাবে না
+                reviewInputSection.style.display = 'block'; // ইউজার রিভিউ ফর্ম দেখান
+            } else {
+                // লগইন না করলে ইউজার রিভিউ ফর্ম লুকানো থাকবে
+                reviewInputSection.style.display = 'none';
+            }
+
+            if (currentUser && currentUser.isAdmin) {
+                adminReviewBtnWrapper.style.display = 'block'; // এডমিন রিভিউ বাটন দেখান
+            } else {
+                adminReviewBtnWrapper.style.display = 'none'; // এডমিন রিভিউ বাটন লুকান
+                adminReviewForm.style.display = 'none'; // এডমিন রিভিউ ফর্ম লুকান
+            }
+        }
+
+
+        // বাই বাটন ইভেন্ট লিসেনার
+        document.querySelectorAll('.buy-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                if (!currentUser) {
+                    showFlashMessage('অর্ডার করার জন্য অনুগ্রহ করে লগইন করুন।', 'error', 10000); // ১০ সেকেন্ড দেখাবে
+                    showPage(authPage);
+                    return;
+                }
+
+                const price = e.target.dataset.price;
+                const product = e.target.dataset.product;
+
+                // নতুন পেজ ওপেন করার জন্য পেমেন্ট পেজ দেখান
+                showPage(paymentPage);
+                document.getElementById('paymentAmount').innerText = price;
+                document.getElementById('lastFourDigits').value = ''; // আগের ভ্যালু ক্লিয়ার করুন
+                document.getElementById('confirmPaymentBtn').setAttribute('data-product-price', price);
+                document.getElementById('confirmPaymentBtn').setAttribute('data-product-name', product);
+
+                // একটি ইনপুট ফিল্ড পপআপ করুন লিঙ্ক নেওয়ার জন্য
+                let linkPrompt = '';
+                if (product === "ইউটিউব সাবস্ক্রাইবার") {
+                    linkPrompt = prompt("আপনার ইউটিউব চ্যানেলটির লিংক দিন:");
+                } else if (product === "ফেসবুক ফলোয়ার") {
+                    linkPrompt = prompt("আপনার পেজের লিংকটি দিন:");
+                }
+
+                if (linkPrompt) {
+                    document.getElementById('confirmPaymentBtn').setAttribute('data-link', linkPrompt);
+                } else {
+                    // যদি লিংক না দেয়, তাহলে তাকে হোমপেজে ফেরত পাঠান বা একটি মেসেজ দিন
+                    showFlashMessage('লিংক না দেওয়ায় অর্ডার বাতিল করা হয়েছে।', 'error', 10000); // ১০ সেকেন্ড দেখাবে
+                    showPage(homePage);
+                }
+            });
+        });
+
+        // বিকাশ নাম্বার কপি ফাংশন
+        function copyBikashNumber() {
+            const bKashNumber = document.getElementById('bKashNumber').innerText;
+            navigator.clipboard.writeText(bKashNumber)
+                .then(() => {
+                    showFlashMessage('বিকাশ নাম্বার কপি করা হয়েছে!');
+                })
+                .catch(err => {
+                    console.error('কপি করতে ব্যর্থ:', err);
+                    showFlashMessage('বিকাশ নাম্বার কপি করতে ব্যর্থ হয়েছে।', 'error');
+                });
+        }
+
+        // শেষ চারটি ডিজিট ইনপুট চেঞ্জ ইভেন্ট
+        document.getElementById('lastFourDigits').addEventListener('input', function() {
+            const confirmBtn = document.getElementById('confirmPaymentBtn');
+            if (this.value.length === 4) {
+                confirmBtn.classList.add('active');
+                confirmBtn.disabled = false;
+            } else {
+                confirmBtn.classList.remove('active');
+                confirmBtn.disabled = true;
+            }
+        });
+
+        // কনফার্ম পেমেন্ট বাটন ইভেন্ট
+        document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+            const lastFourDigits = document.getElementById('lastFourDigits').value;
+            const amount = this.getAttribute('data-product-price');
+            const product = this.getAttribute('data-product-name');
+            const link = this.getAttribute('data-link');
+
+            if (lastFourDigits.length === 4) {
+                showFlashMessage('আপনার অনুরোধ আমাদের এডমিন কে পাঠানো হয়েছে!', 'success', 10000); // ১০ সেকেন্ড দেখাবে
+                // এখানে বাস্তব ক্ষেত্রে ডেটা সার্ভারে পাঠানো হবে
+                const newPayment = {
+                    product: product,
+                    amount: amount,
+                    link: link,
+                    lastFourDigits: lastFourDigits,
+                    userEmail: currentUser.email,
+                    timestamp: new Date().toLocaleString()
+                };
+                payments.push(newPayment);
+                localStorage.setItem('payments', JSON.stringify(payments)); // ডেমো ডেটা সেভ
+                showPage(homePage); // হোমপেজে ফেরত পাঠান
+            } else {
+                showFlashMessage('অনুগ্রহ করে শেষ ৪ ডিজিট দিন।', 'error', 10000); // ১০ সেকেন্ড দেখাবে
+            }
+        });
+
+        // রিভিউ সেকশনের JavaScript লজিক
+        const allReviewsContainer = document.querySelector('.all-reviews-container'); // নতুন কন্টেইনার
+        const submitReviewButton = document.getElementById('submitReview');
+        const reviewerNameInput = document.getElementById('reviewerName');
+        const reviewTextInput = document.getElementById('reviewText');
+
+        // এডমিন রিভিউ ফর্ম উপাদান
+        const adminReviewBtnWrapper = document.getElementById('adminReviewBtnWrapper');
+        const toggleAdminReviewFormBtn = document.getElementById('toggleAdminReviewForm');
+        const adminReviewForm = document.getElementById('adminReviewForm');
+        const adminReviewerNameInput = document.getElementById('adminReviewerName');
+        const adminReviewText = document.getElementById('adminReviewText');
+        const submitAdminReviewBtn = document.getElementById('submitAdminReview');
+
+
+        // সমস্ত রিভিউ লোড করা
+        function loadReviews() {
+            allReviewsContainer.innerHTML = ''; // পুরোনো রিভিউ পরিষ্কার করুন
+
+            let allReviews = [];
+            const currentFakeReviews = JSON.parse(localStorage.getItem('fakeReviews')) || [];
+            const currentUserReviews = JSON.parse(localStorage.getItem('userReviews')) || [];
+
+            // প্রতিটি রিভিউতে একটি unique ID এবং type যোগ করুন
+            currentFakeReviews.forEach(review => {
+                if (!review.id) review.id = 'fake_' + Date.now() + Math.random().toString(36).substr(2, 9);
+                review.type = 'fake';
+                allReviews.push(review);
+            });
+            currentUserReviews.forEach(review => {
+                if (!review.id) review.id = 'user_' + Date.now() + Math.random().toString(36).substr(2, 9);
+                review.type = 'user';
+                allReviews.push(review);
+            });
+
+            // টাইমস্ট্যাম্প অনুযায়ী রিভিউগুলো সাজানো (নতুনগুলো উপরে)
+            allReviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            if (allReviews.length === 0) {
+                allReviewsContainer.innerHTML = '<div class="review-item"><p class="bengali-text">এখনও কোনো কাস্টমার রিভিউ নেই। আপনি প্রথম রিভিউটি দিন!</p></div>';
+                return;
+            }
+
+            allReviews.forEach(review => {
+                const reviewDiv = document.createElement('div');
+                reviewDiv.classList.add('review-item');
+                // যেহেতু সব রিভিউ একই রকম হবে, তাই user-review এবং admin-review ক্লাস যোগ করার দরকার নেই।
+                // যদি আপনি ভবিষ্যতে আবার ভিন্ন রঙ বা স্টাইল দিতে চান, তাহলে এই লাইনগুলো আনকমেন্ট করতে পারেন:
+                /*
+                if (review.type === 'user') {
+                    reviewDiv.classList.add('user-review');
+                } else if (review.type === 'fake' && review.id.startsWith('admin_')) { // এডমিন রিভিউ
+                    reviewDiv.classList.add('admin-review');
+                }
+                */
+
+                reviewDiv.innerHTML = `
+                    <p class="reviewer-name">${review.name}</p>
+                    <p>${review.message}</p>
+                    ${currentUser && currentUser.isAdmin ? `<button class="delete-review-btn" data-id="${review.id}" data-type="${review.type}">ডিলিট</button>` : ''}
+                `;
+                allReviewsContainer.appendChild(reviewDiv);
+            });
+            addDeleteEventListeners(); // ডিলিট বাটনে ইভেন্ট লিসেনার যোগ করুন
+        }
+
+        // ডিলিট বাটনে ইভেন্ট লিসেনার যোগ করা
+        function addDeleteEventListeners() {
+            document.querySelectorAll('.delete-review-btn').forEach(button => {
+                button.onclick = (event) => {
+                    const buttonElement = event.target;
+                    const reviewId = buttonElement.dataset.id;
+                    const reviewType = buttonElement.dataset.type;
+
+                    if (confirm('আপনি কি এই রিভিউটি ডিলিট করতে চান?')) {
+                        if (reviewType === 'fake') {
+                            let currentFakeReviews = JSON.parse(localStorage.getItem('fakeReviews')) || [];
+                            currentFakeReviews = currentFakeReviews.filter(review => review.id !== reviewId);
+                            localStorage.setItem('fakeReviews', JSON.stringify(currentFakeReviews));
+                        } else if (reviewType === 'user') {
+                            let currentUserReviews = JSON.parse(localStorage.getItem('userReviews')) || [];
+                            currentUserReviews = currentUserReviews.filter(review => review.id !== reviewId);
+                            localStorage.setItem('userReviews', JSON.stringify(currentUserReviews));
+                        }
+                        showFlashMessage('রিভিউ সফলভাবে ডিলিট করা হয়েছে!', 'success', 3000);
+                        loadReviews(); // নতুন করে সমস্ত রিভিউ লোড করুন
+                    }
+                };
+            });
+        }
+
+
+        // ইউজারদের রিভিউ সাবমিট করা
+        submitReviewButton.addEventListener('click', () => {
+            const name = reviewerNameInput.value.trim(); // এটি এখন অটো-ফিলড
+            const review = reviewTextInput.value.trim();
+
+            if (name && review) {
+                const newReview = { 
+                    id: 'user_' + Date.now() + Math.random().toString(36).substr(2, 9), // ইউনিক আইডি
+                    name: name, 
+                    message: review, 
+                    timestamp: new Date().toISOString(), // ISO ফরম্যাটে টাইমস্ট্যাম্প
+                    type: 'user' // টাইপ নির্দিষ্ট করুন
+                };
+                let currentUserReviews = JSON.parse(localStorage.getItem('userReviews')) || [];
+                currentUserReviews.push(newReview);
+                localStorage.setItem('userReviews', JSON.stringify(currentUserReviews)); // লোকালস্টোরেজে সেভ করুন
+
+                showFlashMessage('আপনার রিভিউ সফলভাবে জমা হয়েছে!', 'success', 5000); // ৫ সেকেন্ড দেখাবে
+
+                loadReviews(); // সমস্ত রিভিউ লোড করে দেখান
+
+                // ফর্ম খালি করা
+                reviewTextInput.value = '';
+
+            } else {
+                showFlashMessage('অনুগ্রহ করে আপনার রিভিউ লিখুন।', 'error', 5000); // ৫ সেকেন্ড দেখাবে
+            }
+        });
+
+        // এডমিন রিভিউ ফর্ম টগল
+        toggleAdminReviewFormBtn.addEventListener('click', () => {
+            if (adminReviewForm.style.display === 'none' || adminReviewForm.style.display === '') {
+                adminReviewForm.style.display = 'flex';
+                toggleAdminReviewFormBtn.textContent = 'এডমিন রিভিউ ফর্ম লুকান';
+            } else {
+                adminReviewForm.style.display = 'none';
+                toggleAdminReviewFormBtn.textContent = 'এডমিন হিসেবে রিভিউ দিন';
+            }
+        });
+
+        // এডমিন হিসেবে রিভিউ জমা দিন
+        submitAdminReviewBtn.addEventListener('click', () => {
+            const name = adminReviewerNameInput.value.trim();
+            const review = adminReviewText.value.trim();
+
+            if (name && review) {
+                const newReview = { 
+                    id: 'admin_' + Date.now() + Math.random().toString(36).substr(2, 9), // ইউনিক আইডি
+                    name: name, 
+                    message: review, 
+                    timestamp: new Date().toISOString(), // ISO ফরম্যাটে টাইমস্ট্যাম্প
+                    type: 'fake' // এডমিন রিভিউ ফেক রিভিউ অ্যারেতে থাকবে
+                };
+                
+                let currentFakeReviews = JSON.parse(localStorage.getItem('fakeReviews')) || [];
+                currentFakeReviews.push(newReview); // অ্যারের শেষে যোগ করুন
+                localStorage.setItem('fakeReviews', JSON.stringify(currentFakeReviews)); // লোকালস্টোরেজে সেভ করুন
+                
+                showFlashMessage('এডমিন রিভিউ সফলভাবে জমা হয়েছে!', 'success', 5000);
+
+                loadReviews(); // সমস্ত রিভিউ লোড করুন
+
+                // ফর্ম খালি করা
+                adminReviewerNameInput.value = '';
+                adminReviewText.value = '';
+                adminReviewForm.style.display = 'none'; // ফর্ম লুকান
+                toggleAdminReviewFormBtn.textContent = 'এডমিন হিসেবে রিভিউ দিন'; // বাটনের লেখা পরিবর্তন করুন
+            } else {
+                showFlashMessage('অনুগ্রহ করে এডমিন নাম এবং রিভিউ লিখুন।', 'error', 5000);
+            }
+        });
+
+
+        // পেজ লোড হওয়ার সময় লগইন চেক করুন
+        if (currentUser) {
+            showPage(homePage);
+            updateSidebarForUser();
+            updateReviewFormForUser(); // নিশ্চিত করুন রিভিউ ফর্ম সঠিকভাবে দেখাচ্ছে
+        } else {
+            showPage(authPage);
+        }
+
+    </script>
+
+</body>
+</html>
